@@ -19,21 +19,18 @@ import javax.inject.Inject;
  */
 
 public class ControllerServlet extends HttpServlet {
-		private static final long serialVersionUID = 1L;
-		private DBConnection dbConnection;
+	private static final long serialVersionUID = 1L;
+	private DBConnection dbConnection;
 
-		@Inject
+	@Inject
     private BookDAO bookDAO;
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
 
     public void init() {
 			dbConnection = new DBConnection();
 			bookDAO = new BookDAO(dbConnection.getConnection());
     }
 
-		public void destroy() {
+	public void destroy() {
 			dbConnection.disconnect();
 		}
 
@@ -41,9 +38,7 @@ public class ControllerServlet extends HttpServlet {
         super();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException  {
 		String action = request.getPathInfo();
@@ -68,6 +63,8 @@ public class ControllerServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
+
+	private void deleteBook(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { }
 
 	private void showBookAdmin(HttpServletRequest request, HttpServletResponse response)
 			throws ClassNotFoundException, SQLException, ServletException, IOException {
@@ -105,9 +102,6 @@ public class ControllerServlet extends HttpServlet {
 		response.sendRedirect("list");
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		PrintWriter out = response.getWriter();
