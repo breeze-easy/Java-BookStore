@@ -23,20 +23,20 @@ public class ControllerServlet extends HttpServlet {
 	private DBConnection dbConnection;
 
 	@Inject
-    private BookDAO bookDAO;
+	private BookDAO bookDAO;
 
-    public void init() {
-			dbConnection = new DBConnection();
-			bookDAO = new BookDAO(dbConnection.getConnection());
-    }
+	public void init() {
+		dbConnection = new DBConnection();
+		bookDAO = new BookDAO(dbConnection.getConnection());
+	}
 
 	public void destroy() {
-			dbConnection.disconnect();
-		}
+		dbConnection.disconnect();
+	}
 
-    public ControllerServlet() {
-        super();
-    }
+	public ControllerServlet() {
+		super();
+	}
 
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -46,17 +46,26 @@ public class ControllerServlet extends HttpServlet {
 		try {
 			switch(action) {
 				case "/admin":
-					 showBookAdmin(request, response);
-           break;
-			  case "/new":
+					showBookAdmin(request, response);
+					break;
+				case "/new":
 					showNewForm(request, response);
-          break;
+					break;
 				case "/insert":
 					insertBook(request, response);
-          break;
-        default:
-				   listBooks(request, response);
-           break;
+					break;
+				case "/delete":
+					deleteBook(request, response);
+					break;
+				case "/edit":
+					showEditForm(request,response);
+					break;
+				case "/update":
+					updateBook(request,response);
+					break;
+				default:
+					listBooks(request, response);
+					break;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -64,7 +73,22 @@ public class ControllerServlet extends HttpServlet {
 		}
 	}
 
-	private void deleteBook(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { }
+	private void updateBook(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		String title = request.getParameter("booktitle");
+		String author = request.getParameter("bookauthor");
+		Float price = Float.parseFloat(request.getParameter("bookprice"));
+		Book book = new Book(id, title, author, price);
+		bookDAO.updateBook(book);
+		response.sendRedirect("list");
+	}
+
+	private void deleteBook(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		bookDAO.deleteBook(id);
+		response.sendRedirect("list");
+	}
 
 	private void showBookAdmin(HttpServletRequest request, HttpServletResponse response)
 			throws ClassNotFoundException, SQLException, ServletException, IOException {
@@ -100,6 +124,14 @@ public class ControllerServlet extends HttpServlet {
 
 		bookDAO.insertBook(newBook);
 		response.sendRedirect("list");
+	}
+
+	private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		Book book = bookDAO.getBook(id);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/BookForm.jsp");
+		request.setAttribute("book", book);
+		dispatcher.forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
