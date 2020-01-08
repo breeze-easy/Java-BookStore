@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 public class BookDAO {
     private Connection jdbcConnection;
-    private Pagination pagination;
     private int numberOfBooks;
 
     public int getNumberOfBooks() {
