@@ -1,0 +1,19 @@
+============== DATABASE ===================
+*** SQLite database in command shell
+C:\devtools\sqlite-tools\sqlite3 C:\Users\andrew\IdeaProjects\Java-BookStore\book_store.db
+.tables
+.schema <table_name>
+.mode
+
+select * from book limit 50 offset 970;
+select count(*) from (select * from book limit 50 offset 0);
+insert into book (title, author, price) select title, author, price from book;
+select * from sqlite_master where type = 'trigger';
+
+============== MAVEN ===================
+*** Maven: Deploy app and start Tomcat
+mvn clean install tomcat7:run
+
+*** Maven: Run tests
+mvn -q -P integration -D it.test=Module3_* verify
+

@@ -1,17 +1,32 @@
 package com.pluralsight;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
+import java.sql.*;
 import java.util.ArrayList;
 
 public class BookDAO {
     private Connection jdbcConnection;
+    private Pagination pagination;
+    private int numberOfBooks;
+
+    public int getNumberOfBooks() {
+        String sql = "SELECT  COUNT (*) AS count FROM book";
+        try {
+            Statement statement = jdbcConnection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                numberOfBooks = resultSet.getInt("count");
+            }
+            resultSet.close();
+            statement.close();
+            } catch (SQLException e) {
+                numberOfBooks=0;
+                e.printStackTrace();
+            }
+        return numberOfBooks;
+    }
+
+
     public BookDAO(Connection connection)
     {
       jdbcConnection = connection;
@@ -49,27 +64,15 @@ public class BookDAO {
 
       String sql = "SELECT * FROM book";
 
-		  try {
-			    Statement statement = jdbcConnection.createStatement();
+        return getBooks(listBook, sql);
+    }
 
-	        ResultSet resultSet = statement.executeQuery(sql);
+    public ArrayList<Book> listBooks(int limit, int offset) {
+        ArrayList<Book> listBook = new ArrayList<>();
 
-	        while (resultSet.next()) {
-              int id = resultSet.getInt("id");
-	            String title = resultSet.getString("title");
-	            String author = resultSet.getString("author");
-	            float price = resultSet.getFloat("price");
+        String sql = "SELECT * FROM book LIMIT " + limit + " OFFSET " + offset;
 
-	            Book book = new Book(id, title, author, price);
-	            listBook.add(book);
-	        }
-
-	        resultSet.close();
-	        statement.close();
-  		} catch (SQLException e) {
-  			e.printStackTrace();
-  		}
-        return listBook;
+        return getBooks(listBook, sql);
     }
 
     public boolean insertBook(Book book)  {
@@ -91,22 +94,6 @@ public class BookDAO {
         return false;
     }
 
-    public boolean deleteBook(int id){
-        String sql = "DELETE FROM book WHERE id = ?";
-        try {
-            PreparedStatement statement = jdbcConnection.prepareStatement(sql);
-            statement.setInt(1, id);
-            boolean rowDeleted = statement.executeUpdate() >0;
-            statement.close();
-            return  rowDeleted;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-
-    }
-
     public boolean updateBook(Book book){
         String sql = "UPDATE book SET title = ?, author = ?, price = ? WHERE id = ?";
         try {
@@ -126,5 +113,43 @@ public class BookDAO {
 
     }
 
+    public boolean deleteBook(int id){
+        String sql = "DELETE FROM book WHERE id = ?";
+        try {
+            PreparedStatement statement = jdbcConnection.prepareStatement(sql);
+            statement.setInt(1, id);
+            boolean rowDeleted = statement.executeUpdate() >0;
+            statement.close();
+            return  rowDeleted;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
+        return false;
+
+    }
+
+    private ArrayList<Book> getBooks(ArrayList<Book> listBook, String sql) {
+        try {
+            Statement statement = jdbcConnection.createStatement();
+
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String title = resultSet.getString("title");
+                String author = resultSet.getString("author");
+                float price = resultSet.getFloat("price");
+
+                Book book = new Book(id, title, author, price);
+                listBook.add(book);
+            }
+
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listBook;
+    }
 }
