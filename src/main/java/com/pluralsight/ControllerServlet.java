@@ -1,19 +1,15 @@
 package com.pluralsight;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-
+import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.inject.Inject;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.ArrayList;
 /**
  * Servlet implementation class HelloWorld
  */
@@ -92,18 +88,38 @@ public class ControllerServlet extends HttpServlet {
 
 	private void showBookAdmin(HttpServletRequest request, HttpServletResponse response)
 			throws ClassNotFoundException, SQLException, ServletException, IOException {
-		ArrayList<Book> books_list = bookDAO.listAllBooks();
+		int currentPage = 1;
+		int recordsPerPage = 20;
+		if(request.getParameter("currentPage") !=null) currentPage = Integer.parseInt(request.getParameter("currentPage"));
+		int numberOfBooks = bookDAO.getNumberOfBooks();
+		int numberOfPages = (int) Math.ceil(numberOfBooks * 1.0/recordsPerPage);
+
+		ArrayList<Book> books_list = bookDAO.listBooks(recordsPerPage, (currentPage -1) * recordsPerPage);
+		// ArrayList<Book> books_list = bookDAO.listAllBooks();
 
 		request.setAttribute("books", books_list);
+		request.setAttribute("numberOfBooks", numberOfBooks);
+		request.setAttribute("numberOfPages", numberOfPages);
+		request.setAttribute("currentPage", currentPage);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/BookAdmin.jsp");
 		dispatcher.forward(request, response);
 	}
 
 	private void listBooks(HttpServletRequest request, HttpServletResponse response)
 			throws ClassNotFoundException, SQLException, ServletException, IOException {
-		ArrayList<Book> books_list = bookDAO.listAllBooks();
+		int currentPage = 1;
+		int recordsPerPage = 20;
+		if(request.getParameter("currentPage") !=null) currentPage = Integer.parseInt(request.getParameter("currentPage"));
+		int numberOfBooks = bookDAO.getNumberOfBooks();
+		int numberOfPages = (int) Math.ceil(numberOfBooks * 1.0/recordsPerPage);
+
+		ArrayList<Book> books_list = bookDAO.listBooks(recordsPerPage, (currentPage -1) * recordsPerPage);
+		// ArrayList<Book> books_list = bookDAO.listAllBooks();
 
 		request.setAttribute("books", books_list);
+		request.setAttribute("numberOfBooks", numberOfBooks);
+		request.setAttribute("numberOfPages", numberOfPages);
+		request.setAttribute("currentPage", currentPage);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/BookList.jsp");
 		dispatcher.forward(request, response);
 	}

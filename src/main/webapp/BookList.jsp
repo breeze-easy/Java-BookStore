@@ -11,31 +11,42 @@
 
 
 <body>
-	<ul>
-	  <li><a class="active" href="list">Book Listing</a></li>
-    <li><a href="admin">Admin</a></li>
-	</ul>
+<ul>
+	<li><a class="active" href="list">Book Listing</a></li>
+	<li><a href="admin">Admin</a></li>
+</ul>
 
-    <div class="container">
-	    <div class="booktable">
-	        <table border="1" cellpadding="5">
-	            <caption>List of Books</caption>
+	<div class="container">
+
+	<%@ include file="navigation.jspf" %>
+
+		<div class="booktable">
+		<table border="1" cellpadding="5">
+			<caption>List of Books (total:<c:out value="${numberOfBooks}"/>)</caption>
 	            <tr>
+	                <th>Id</th><!--@@@Remove me-->
 	                <th>Title</th>
 	                <th>Author</th>
 	                <th>Price</th>
 	            </tr>
 
 	 			<c:forEach items="${books}" var="item">
-	                <tr><form name="cart_form" action="/cart/addcart">
+				  <tr>
+				    <form name="cart_form" action="/cart/addcart">
                       <input type="hidden" name="id" value="<c:out value='${item.getId()}' />" />
+	                    <td> ${ item.getId() } </td><!--@@@Remove me-->
 	                    <td> ${ item.getTitle() } </td>
 	                    <td> ${ item.getAuthor() } </td>
 	                    <td> <fmt:formatNumber value = "${ item.getPrice() }" type = "currency"/>  </td>
-	                </form></tr>
-	            </c:forEach>
+	                </form>
+				  </tr>
+	            </c:forEach><br>
 	        </table>
-	    </div>
-    </div>
+		</div>
+
+	<%@ include file="navigation.jspf" %>
+
+
+	</div>
 </body>
 </html>
