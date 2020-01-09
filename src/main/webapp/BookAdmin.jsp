@@ -17,6 +17,9 @@
 </ul>
 
 <div class="container">
+
+	<%@ include file="NavigationAdmin.jspf" %>
+
 	<div class="booktable">
 		<table border="1" cellpadding="5">
 			<caption>List of Books</caption>
@@ -39,6 +42,9 @@
 			</c:forEach>
 		</table>
 	</div>
+
+	<%@ include file="NavigationAdmin.jspf" %>
+
 </div>
 </body>
 </html>

@@ -1,6 +1,6 @@
 ============== DATABASE ===================
 *** SQLite database in command shell
-C:\devtools\sqlite-tools\sqlite3 C:\Users\andrew\IdeaProjects\Java-BookStore\book_store.db
+%DevTools%\sqlite-tools\sqlite3 %IdeaProjects%\PluralSight\book_store.db
 .tables
 .schema <table_name>
 .mode
