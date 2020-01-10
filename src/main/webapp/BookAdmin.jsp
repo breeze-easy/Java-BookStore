@@ -18,7 +18,10 @@
 
 <div class="container">
 
-	<%@ include file="NavigationAdmin.jspf" %>
+<%--Include pagination file and pass calling page/view  as a parameter--%>
+	<jsp:include page="Navigation.jsp" flush="true">
+		<jsp:param name="callingPage" value="admin"/>
+	</jsp:include>
 
 	<div class="booktable">
 		<table border="1" cellpadding="5">
@@ -43,7 +46,10 @@
 		</table>
 	</div>
 
-	<%@ include file="NavigationAdmin.jspf" %>
+	<%--Include pagination file and pass calling page/view  as a parameter--%>
+	<jsp:include page="Navigation.jsp" flush="true">
+		<jsp:param name="callingPage" value="admin"/>
+	</jsp:include>
 
 </div>
 </body>

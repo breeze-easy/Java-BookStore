@@ -18,7 +18,10 @@
 
 	<div class="container">
 
-	<%@ include file="navigation.jspf" %>
+		<%--Include pagination file and pass calling page/view  as a parameter--%>
+		<jsp:include page="Navigation.jsp" flush="true">
+			<jsp:param name="callingPage" value="list"/>
+		</jsp:include>
 
 		<div class="booktable">
 		<table border="1" cellpadding="5">
@@ -44,8 +47,12 @@
 	        </table>
 		</div>
 
-	<%@ include file="navigation.jspf" %>
-
+		<%--Import url of pagination file(notice alternative solution compare to <jsp:include...> above)
+			and pass calling page/view  as a parameter
+		--%>
+		<c:import url="Navigation.jsp">
+			<c:param name="callingPage" value="list"/>
+		</c:import>
 
 	</div>
 </body>

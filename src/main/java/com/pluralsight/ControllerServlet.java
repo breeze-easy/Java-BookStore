@@ -59,6 +59,9 @@ public class ControllerServlet extends HttpServlet {
 				case "/update":
 					updateBook(request,response);
 					break;
+				case "/temp":
+				callTemp(request,response);
+				break;
 				default:
 					listBooks(request, response);
 					break;
@@ -67,6 +70,11 @@ public class ControllerServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	private void callTemp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/Temp.jsp");
+		dispatcher.forward(request, response);
 	}
 
 	private void updateBook(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -83,7 +91,7 @@ public class ControllerServlet extends HttpServlet {
 			throws ServletException, IOException {
 		int id = Integer.parseInt(request.getParameter("id"));
 		bookDAO.deleteBook(id);
-		response.sendRedirect("list");
+		response.sendRedirect("admin");
 	}
 
 	private void showBookAdmin(HttpServletRequest request, HttpServletResponse response)
